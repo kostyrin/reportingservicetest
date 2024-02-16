@@ -1,9 +1,9 @@
 ﻿using Npgsql;
 using System.Data;
-using ReportingService.Data.Domain;
+using ReportService.Data.Domain;
 using Dapper;
 
-namespace ReportingService.Data.Repositories;
+namespace ReportService.Data.Repositories;
 
 public interface IReportingRepository
 {

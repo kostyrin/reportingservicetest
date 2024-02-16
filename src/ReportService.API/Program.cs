@@ -1,25 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
+using ReportService.Data.Abstractions;
+using ReportService.Data.Services;
+using System.Data;
+using System;
+using ReportService.Data.Repositories;
 
-namespace ReportService
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            BuildWebHost(args).Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
-    }
-}
+// Add services to the container.
+
+builder.Services.AddControllers();
+builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(builder.Configuration.GetConnectionString("EmployeeDB")));
+builder.Services.AddScoped<IReportingRepository, ReportingRepository>();
+builder.Services.AddScoped<IReportingService, ReportingService>();
+builder.Services.AddHttpClient<BuhApiClient>(cfg => cfg.BaseAddress = new Uri(builder.Configuration.GetValue<string>("buhApiUrl")));
+builder.Services.AddHttpClient<SalaryApiClient>(cfg => cfg.BaseAddress = new Uri(builder.Configuration.GetValue<string>("salaryApiUrl")));
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

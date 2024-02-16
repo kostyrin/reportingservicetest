@@ -1,7 +1,8 @@
-﻿using ReportingService.Data.Domain;
+﻿using ReportService.Data.Domain;
+using System.Globalization;
 using System.Text;
 
-namespace ReportService.Data.Domain
+namespace ReportService.Data
 {
     public class ReportFormatter
     {
@@ -11,6 +12,7 @@ namespace ReportService.Data.Domain
             stringBuilder = new StringBuilder();
         }
 
+        public void AddPeriod(DateTime dt) => stringBuilder.Append(dt.ToString("MMMM yyyy", CultureInfo.CurrentCulture));
         public void AddNewLine() => stringBuilder.Append(Environment.NewLine);
         public void AddWordLine() => stringBuilder.Append("--------------------------------------------");
         public void AddWordTab() => stringBuilder.Append("         ");

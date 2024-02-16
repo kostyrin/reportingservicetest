@@ -1,4 +1,4 @@
-﻿namespace ReportingService.Data.Domain
+﻿namespace ReportService.Data.Domain
 {
     public class Employee
     {
